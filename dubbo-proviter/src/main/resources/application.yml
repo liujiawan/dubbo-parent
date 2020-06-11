@@ -1,0 +1,50 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 4000
+    max-connections: 20000
+    min-spare-threads: 1000
+  port: 9600
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: nacos-dubbo-provider
+  datasource:
+    url: jdbc:mysql://localhost:3306/oldMan?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+dubbo:
+  registry:
+    address: nacos://127.0.0.1:8848/
+  service:
+    version: 1.0.0
+  protocol:
+    name: dubbo
+    port: -1
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.wanhejia.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+seata:
+  application-id: ${spring.application.name} # Seata 应用编号，默认为 ${spring.application.name}
+  tx-service-group: nacos-dubbo-provider-group # Seata 事务组编号，用于 TC 集群名
+  # Seata 服务配置项，对应 ServiceProperties 类
+  service:
+    # 虚拟组和分组的映射
+    vgroupMapping:
+      nacos-dubbo-provider-group: default
+  # Seata 注册中心配置项，对应 RegistryProperties 类
+  registry:
+    type: nacos # 注册中心类型，默认为 file
+    nacos:
+      cluster: default # 使用的 Seata 分组
+      namespace: b8a30257-8b65-44ce-ac50-a2ade6ff8fc9
+      application: seata-server
+      serverAddr: 127.0.0.1:8848 # Nacos 服务地址
